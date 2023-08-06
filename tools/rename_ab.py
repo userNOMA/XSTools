@@ -54,7 +54,7 @@ def rename_ab(path):
 
 # 判断文件路径是不是我要的路径
 def need_file(path):
-    return False if re.search(r'\\[0-9]+[ _]', path) is None else True
+    return False if re.search(r'\\[0-9]+(_A|_B| \(1\)| \(2\))\.', path) is None else True
 
 
 # 获取文件编号
@@ -91,9 +91,8 @@ def rename_c(path, num, tail):
 # 仅负责更名从12_A到num_A
 def rename_d(path, ab, num):
     path_new = re.sub(r'\\[0-9]+_[AB].', r'\\' + str(num) + ab, path)
-    path_old = re.sub(r'_[AB].', ab, path)
-    os.rename(path_old, path_new)
-    print(path_old, '  >>>>>  ', path_new)
+    os.rename(path, path_new)
+    print(path, '  >>>>>  ', path_new)
 
 
 # 遍历重命名文件：
@@ -104,18 +103,26 @@ def rename_d(path, ab, num):
 # 2.处理修改后中间少一项编号的情况（进行重新编号）
 def rename_ab1(path):
     # 获取所有当前路径下的文件
-    all_files, need_files = [], []
+    all_files, need_files, dont_need = [], [], []
     recursive_files_scandir(path, all_files)
     zxs_print.print(all_files)
     # 第一次遍历，得到需要的文件路径
     for file in all_files:
         if need_file(file):
             need_files.append(file)
-    zxs_print.print('1.符合要求的文件路径:', pri=1)
-    zxs_print.print(need_files, pri=1)
+        else:
+            dont_need.append(file)
+    zxs_print.print(f'''1.1符合要求的文件共计 {len(need_files)} 条,''', pri=1)
+    zxs_print.print('\n'.join(need_files), pri=0)
+    zxs_print.print(f'''   不符合要求的文件共计 {len(dont_need)} 条，
+   具体路径为：''', pri=1)
+    zxs_print.print('\n'.join(dont_need), pri=1)
+    inp = input("是否确认继续：Y/y确认\n")
+    if inp != 'Y' and inp != 'y':
+        return
     # 第二次遍历，更名，得到重复的文件路径
     zxs_print.print('2.重命名：', pri=1)
-    exit_num, rep_files, deal = {}, [], {}
+    exit_num, rep_files, deal = {}, [], {int: list}
     for file in need_files:
         num = int(get_num(file))
         exit_num[num] = exit_num.setdefault(num, 0) + 1
@@ -124,7 +131,11 @@ def rename_ab1(path):
         else:
             try:
                 file_new = rename(file)
-                deal[num] = file_new
+                if exit_num[num] == 1:
+                    deal[num] = ['', '']
+                    deal[num][0] = file_new
+                else:
+                    deal[num][1] = file_new
             except FileExistsError:
                 rep_files.append(file)
     zxs_print.print(rep_files)
@@ -135,11 +146,12 @@ def rename_ab1(path):
         exit_num.setdefault(max_num + 1, 0)
         exit_num[max_num+1] += 1
         if exit_num[max_num+1] == 1:
-            file_new = rename_c(file, str(max(exit_num.keys())), '_A.')
-        elif exit_num[max_num+1] == 2:
-            file_new = rename_c(file, str(max(exit_num.keys())), '_B.')
+            num = max(exit_num.keys())
+            file_new = rename_c(file, str(num), '_A.')
+            deal[num] = [file_new, '']
+            file_new = rename_c(file, str(num), '_B.')
+            deal[num][1] = file_new
             max_num += 1
-        deal[num] = file_new
     zxs_print.print('4.插空补缺：', pri=1)
     # 第四次循环，将末尾的填补到中间空缺的
     num_ord = sorted(set(exit_num.keys()))
@@ -151,8 +163,8 @@ def rename_ab1(path):
     while 0 < len(num_ord) < real_len:
         num = min(num_ord)
         num_ord.remove(num)
-        rename_d(deal[num], '_A.', num_c)
-        rename_d(deal[num], '_B.', num_c)
+        rename_d(deal[num][0], '_A.', num_c)
+        rename_d(deal[num][1], '_B.', num_c)
         num_c += 1
     print('全部重命名成功！')
 
@@ -165,8 +177,8 @@ inf = f'''将批量更改该文件夹下的文件名：
 33 (2).txt  >>>>>  33_B.txt'''
 zxs_print.print(inf, pri=9)
 inp = input("请输入：Y/y确认\n")
-
 if inp == 'Y' or inp == 'y':
-    rename_ab1(os.getcwd())
+    rename_ab1(r'D:\Learn\TestFiles\相似图片224组')
+    # rename_ab1(os.getcwd())
 else:
     zxs_print.print(f'未确认，退出运行！', pri=9)

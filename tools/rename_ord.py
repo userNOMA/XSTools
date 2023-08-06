@@ -82,7 +82,7 @@ def rename_ord(path, sta_num):
         for file, num in ord_files:
             rename_num(file, num, num - min_num + sta_num)
     elif min_num < sta_num < max_num:
-        rename_ord(path, sta_num-max_num + sta_num-1)
+        rename_ord(path, 2*sta_num - min_num + 1)
         rename_ord(path, sta_num)
     else:
         ord_files = sorted(ord_files.items(), key=lambda x: x[1], reverse=True)
