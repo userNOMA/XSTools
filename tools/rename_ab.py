@@ -178,7 +178,7 @@ inf = f'''将批量更改该文件夹下的文件名：
 zxs_print.print(inf, pri=9)
 inp = input("请输入：Y/y确认\n")
 if inp == 'Y' or inp == 'y':
-    rename_ab1(r'D:\Learn\TestFiles\相似图片224组')
-    # rename_ab1(os.getcwd())
+    # rename_ab1(r'D:\Learn\TestFiles\相似图片224组')
+    rename_ab1(os.getcwd())
 else:
     zxs_print.print(f'未确认，退出运行！', pri=9)
