@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 
 class ZXSPrint:
@@ -168,17 +169,20 @@ def rename_ab1(path):
         num_c += 1
     print('全部重命名成功！')
 
-
-zxs_print.lev = 1
-inf = f'''将批量更改该文件夹下的文件名：
-{os.getcwd()}
+if __name__ == '__main__':
+    zxs_print.lev = 1
+    inf = f'''将批量更改该文件夹下的文件名：
+{sys.argv[1]}
 效果如下：
 33 (1).txt  >>>>>  33_A.txt
 33 (2).txt  >>>>>  33_B.txt'''
-zxs_print.print(inf, pri=9)
-inp = input("请输入：Y/y确认\n")
-if inp == 'Y' or inp == 'y':
-    # rename_ab1(r'D:\Learn\TestFiles\相似图片224组')
-    rename_ab1(os.getcwd())
-else:
-    zxs_print.print(f'未确认，退出运行！', pri=9)
+    zxs_print.print(inf, pri=9)
+    inp = input("请输入：Y/y确认\n")
+    if inp == 'Y' or inp == 'y':
+        # rename_ab1(r'D:\Learn\TestFiles\相似图片224组')
+        if sys.argv[1]:
+            rename_ab1(sys.argv[1])
+        else:
+            rename_ab1(os.getcwd())
+    else:
+        zxs_print.print(f'未确认，退出运行！', pri=9)

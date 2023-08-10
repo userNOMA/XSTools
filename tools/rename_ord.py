@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 
 class ZXSPrint:
@@ -90,17 +91,17 @@ def rename_ord(path, sta_num):
             rename_num(file, num, num + sta_num - min_num)
     print('全部重命名成功！')
 
-
-zxs_print.lev = 1
-inf = f'''将批量更改该文件夹下的文件名：
-{os.getcwd()}
+if __name__ == '__main__':
+    zxs_print.lev = 1
+    inf = f'''将批量更改该文件夹下的文件名：
+{sys.argv[1]}
 把文件名中的数字整体偏移，效果如下：
 33 (1)副本.txt  >>>>>  6 (1)副本.txt
 33 (2).txt  >>>>>  6 (2).txt
 35_A.txt  >>>>>  8_A.txt'''
-zxs_print.print(inf, pri=9)
-inp = input("请输入最小编号偏移后的对应值：\n")
-if inp.isdigit():
-    rename_ord(os.getcwd(), int(inp))
-else:
-    zxs_print.print(f'输入值不正确，退出运行！', pri=9)
+    zxs_print.print(inf, pri=9)
+    inp = input("请输入最小编号偏移后的对应值：\n")
+    if inp.isdigit():
+        rename_ord(sys.argv[1], int(inp))
+    else:
+        zxs_print.print(f'输入值不正确，退出运行！', pri=9)
