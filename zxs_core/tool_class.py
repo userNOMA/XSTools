@@ -1,7 +1,8 @@
-# 写一个自定义的打印类，控制打印
-# 默认直接打印
-# lev：整体打印优先级
 class ZXSPrint:
+    """
+    自定义的打印类，控制打印
+    lev：整体打印优先级
+    """
     lev = int
 
     def __init__(self, lev=0):
