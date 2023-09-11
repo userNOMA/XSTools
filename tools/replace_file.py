@@ -1,21 +1,34 @@
 import tkinter as tk
 from tkinter import filedialog
+import re
 import os
 
 
 def replace_content(files, old_text, new_text):
     for file in files:
-        with open(file, 'r') as f:
+        with open(file, 'r', encoding='UTF-8') as f:
             content = f.read()
 
         content = content.replace(old_text, new_text)
 
-        with open(file, 'w') as f:
+        with open(file, 'w', encoding='UTF-8') as f:
+            f.write(content)
+
+
+def replace_content1(files, old_text, new_text):
+    for file in files:
+        with open(file, 'r', encoding='UTF-8') as f:
+            content = f.read()
+
+        pattern = r"<评审材料设备表>.*?</评审材料设备表>"
+        content = re.sub(pattern, "", content, flags=re.DOTALL)
+
+        with open(file, 'w', encoding='UTF-8') as f:
             f.write(content)
 
 
 def select_files():
-    files = filedialog.askopenfilenames(filetypes=[("Text files", "*.txt")])
+    files = filedialog.askopenfilenames(filetypes=[("all files", "*")])
     file_list.config(state='normal')
     file_list.delete(1.0, tk.END)
     for file in files:
@@ -29,6 +42,7 @@ def replace():
     new_text = new_text_entry.get()
 
     replace_content(files, old_text, new_text)
+    # replace_content1(files, old_text, new_text)
 
     tk.messagebox.showinfo("替换完成", "文件替换完成")
 
