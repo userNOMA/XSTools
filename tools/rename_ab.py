@@ -172,12 +172,17 @@ def rename_ab1(path):
 
 if __name__ == '__main__':
     zxs_print.lev = 1
+<<<<<<< HEAD
+    inf = f'''将批量更改该文件夹下的文件名：
+{os.getcwd()}
+=======
     if len(sys.argv) >= 2:
         pass
     else:
         sys.argv.append(os.getcwd())
     inf = f'''将批量更改该文件夹下的文件名：
 {sys.argv[1]}
+>>>>>>> origin/main
 效果如下：
 33 (1).txt  >>>>>  33_A.txt
 33 (2).txt  >>>>>  33_B.txt'''
@@ -185,9 +190,13 @@ if __name__ == '__main__':
     inp = input("请输入：Y/y确认\n")
     if inp == 'Y' or inp == 'y':
         # rename_ab1(r'D:\Learn\TestFiles\相似图片224组')
+<<<<<<< HEAD
+        rename_ab1(os.getcwd())
+=======
         if len(sys.argv) >= 2:
             rename_ab1(sys.argv[1])
         else:
             rename_ab1(os.getcwd())
+>>>>>>> origin/main
     else:
         zxs_print.print(f'未确认，退出运行！', pri=9)
