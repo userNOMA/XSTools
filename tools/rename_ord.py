@@ -91,8 +91,13 @@ def rename_ord(path, sta_num):
             rename_num(file, num, num + sta_num - min_num)
     print('全部重命名成功！')
 
+
 if __name__ == '__main__':
-    zxs_print.lev = 1
+    if len(sys.argv) >= 2:
+        pass
+    else:
+        sys.argv.append(r'D:\Formal\20230810相似图片200组\截图的图片')
+        # sys.argv.append(os.getcwd())
     inf = f'''将批量更改该文件夹下的文件名：
 {sys.argv[1]}
 把文件名中的数字整体偏移，效果如下：
